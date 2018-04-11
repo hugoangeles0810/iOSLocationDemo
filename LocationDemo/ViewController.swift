@@ -10,16 +10,21 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var trackingBtn: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    @IBAction func handleTrackingClick(_ sender: Any) {
+        if LocationService.sharedInstance.isActive {
+            LocationService.sharedInstance.stopLocationUpdates()
+            trackingBtn.setTitle("Start tracking", for: .normal)
+        } else {
+            LocationService.sharedInstance.startLocationUpdates()
+            trackingBtn.setTitle("Stop tracking", for: .normal)
+        }
     }
-
-
 }
 
