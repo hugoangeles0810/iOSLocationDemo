@@ -10,10 +10,18 @@ import Foundation
 import UIKit
 import CoreLocation
 
+protocol LocationServiceDelegate : NSObjectProtocol {
+    
+    func locationService(_ locationService: LocationService, didUpdateLocations locations: [CLLocation] )
+    
+}
+
 class LocationService : NSObject, CLLocationManagerDelegate {
     
     public static let sharedInstance = LocationService()
     private static let distanceFilterInMeters: CLLocationDistance = 10
+    
+    weak var delegate: LocationServiceDelegate?
     
     public var isActive: Bool {
             return _isServiceActive
@@ -44,7 +52,7 @@ class LocationService : NSObject, CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        print(locations)
+        delegate?.locationService(self, didUpdateLocations: locations)
         
         print("inicia llamada")
         let identifier = UIApplication.shared.beginBackgroundTask(withName: UUID().uuidString, expirationHandler: nil)

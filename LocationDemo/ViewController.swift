@@ -7,9 +7,11 @@
 //
 
 import UIKit
+import CoreLocation
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var locationLbl: UILabel!
     @IBOutlet weak var trackingBtn: UIButton!
     
     override func viewDidLoad() {
@@ -21,10 +23,23 @@ class ViewController: UIViewController {
         if LocationService.sharedInstance.isActive {
             LocationService.sharedInstance.stopLocationUpdates()
             trackingBtn.setTitle("Start tracking", for: .normal)
+            locationLbl.text = "Posición desconocida 🤷‍♂️"
         } else {
             LocationService.sharedInstance.startLocationUpdates()
+            LocationService.sharedInstance.delegate = self
             trackingBtn.setTitle("Stop tracking", for: .normal)
         }
     }
+}
+
+extension ViewController : LocationServiceDelegate {
+    
+    func locationService(_ locationService: LocationService, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.last {
+            locationLbl.text = "Lat: \(location.coordinate.latitude), Lng: \(location.coordinate.longitude)"
+        }
+    }
+    
+    
 }
 
