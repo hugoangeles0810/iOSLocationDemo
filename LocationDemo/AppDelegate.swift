@@ -16,6 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        NotificationCenter.default.addObserver(self, selector: #selector(handleOnNewLocation(_:)), name: .location, object: nil)
         return true
     }
 
@@ -38,9 +39,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
+        NotificationCenter.default.removeObserver(self)
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
 
+    @objc
+    func handleOnNewLocation(_ notification: NSNotification) {
+        print("inicia llamada")
+        let identifier = UIApplication.shared.beginBackgroundTask(withName: UUID().uuidString, expirationHandler: nil)
+        let task = URLSession.shared.dataTask(with: URL(string: "https://google.com")!) {
+            (data, response, error) in
+            UIApplication.shared.endBackgroundTask(identifier)
+            print("fin llamada")
+        }
+        
+        task.resume()
+    }
+    
 }
 

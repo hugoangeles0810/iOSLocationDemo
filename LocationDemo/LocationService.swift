@@ -53,19 +53,14 @@ class LocationService : NSObject, CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         delegate?.locationService(self, didUpdateLocations: locations)
-        
-        print("inicia llamada")
-        let identifier = UIApplication.shared.beginBackgroundTask(withName: UUID().uuidString, expirationHandler: nil)
-        let task = URLSession.shared.dataTask(with: URL(string: "https://google.com")!) {
-            (data, response, error) in
-            UIApplication.shared.endBackgroundTask(identifier)
-            print("fin llamada")
-        }
-        
-        task.resume()
+        NotificationCenter.default.post(name: .location, object: locations)
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("Error \(error)")
     }
+}
+
+extension NSNotification.Name {
+    static let location = Notification.Name(rawValue: "NotificationLocation")
 }
