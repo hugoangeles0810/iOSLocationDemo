@@ -9,7 +9,7 @@
 import UIKit
 import CoreLocation
 
-class ViewController: UIViewController {
+class LocationViewController: UIViewController {
 
     @IBOutlet weak var locationLbl: UILabel!
     @IBOutlet weak var trackingBtn: UIButton!
@@ -32,7 +32,7 @@ class ViewController: UIViewController {
     }
 }
 
-extension ViewController : LocationServiceDelegate {
+extension LocationViewController : LocationServiceDelegate {
     
     func locationService(_ locationService: LocationService, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.last {
